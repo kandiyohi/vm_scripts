@@ -1,0 +1,25 @@
+bin/vm contains a script for simplifying vm start, stop, and device
+attach/detach via virsh.
+
+	vm		Start vm via virsh
+
+	vm -d		Destroy vm via virsh
+
+	vm <file>	Find <file>.xml is vm_xml_dir and try to attach the
+			device hopefully described within it.
+
+	vm -d <file>	Like above, except detach instead of attach.
+
+	vm -r <file>	Like calling `vm -d <file>`, then `vm <file>`, except
+			failure of the detach attempt is ignored.  You can use
+			this to ensure the device is attached, or to reattach
+			the device if needed.
+
+The important variables to modify in the script are vm_xml_dir and vm_name.
+Currently the script is only optimized for adminstrating 1 VM and having 1 xml
+directory to search for the devices.
+
+win10-2.xml is the domain xml for my personal VM.  It probably won't work on
+your machine, so you need to have a usable domain.  It's kept here as an
+example.  I version my domains since virsh destroys any valuable (and
+invaluable) comments in the domain xml that it keeps.
