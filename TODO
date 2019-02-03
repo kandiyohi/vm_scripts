@@ -1,0 +1,14 @@
+TODO:
+
+Add options to `vm` for changing the base directory and domain.
+
+Add functionality to `vm` to update domains.
+
+Port to python, maybe.  Or some other language that isn't a quoting nightmare
+(rc is pretty good, and leaves all our unixy utilities ripe for use).
+
+Add default directory in XDG_CONFIG_HOME/vm_script to have our nice
+configuration.
+
+Add a REPL to administrate the system in realtime (so you can add/remove
+devices more easily).
