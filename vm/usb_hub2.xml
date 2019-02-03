@@ -1,0 +1,9 @@
+    <!-- Inland/Terminus USB hub 13 port -->
+    <hostdev mode='subsystem' type='usb' managed='yes'>
+      <source>
+        <vendor id='0x1a40'/>
+        <product id='0x0201'/>
+	<address type='usb' bus='1' device='18' />
+      </source>
+      <address type='usb' bus='0' port='4'/>
+    </hostdev>

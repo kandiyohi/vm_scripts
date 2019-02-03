@@ -1,0 +1,8 @@
+    <!-- Octane Keyboard -->
+    <hostdev mode='subsystem' type='usb' managed='yes'>
+      <source>
+        <vendor id='0x0c45'/>
+        <product id='0x7603'/>
+      </source>
+      <address type='usb' bus='1' port='3'/>
+    </hostdev>

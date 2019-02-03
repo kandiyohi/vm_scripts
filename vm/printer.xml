@@ -1,0 +1,8 @@
+    <!-- Wooting One Keyboard -->
+    <hostdev mode='subsystem' type='usb' managed='yes'>
+      <source>
+        <vendor id='0x03f0'/>
+        <product id='0xe311'/>
+      </source>
+      <address type='usb' bus='1' port='2'/>
+    </hostdev>
