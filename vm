@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+
+# Modify these as needed.  TODO: Make these arguments that can be given.
+vm_xml_dir="$HOME/vm"
+vm_name="win10-2"
+
+
+# Script for simplifying vm start, stop, and device attach/detach via virsh.
+#
+# vm		Start vm via virsh
+#
+# vm -d		Destroy vm via virsh
+#
+# vm <file>	Find <file>.xml is vm_xml_dir and try to attach the device
+# 		hopefully described within it.
+#
+# vm -d <file>	Like above, except detach instead of attach.
+#
+# vm -r <file>	Like calling `vm -d <file>`, then `vm <file>`, except failure
+# 		of the detach attempt is ignored.  You can use this to ensure
+# 		the device is attached, or to reattach the device if needed.
+#
+# TODO: Allow specifying vm name and vm base XML dir somehow.  Also probably
+# should use getopt instead of hand-parsing the arguments.  Also maybe port to
+# Python since this is becoming more complex than an immune system.
+
+invert=no
+
+# Parse options here.  Note how they need to be before the file because I'm not
+# using getopt yet.  Or is it shopt?
+if [ "$1" == "-d" ]; then
+	invert=yes
+	shift
+elif [ "$1" == "-r" ]; then
+	try_reattach=yes
+	shift
+fi
+
+# Set the device file to attempt attachment.
+if [ -n "$1" ]; then
+	dev="$vm_xml_dir/$1.xml"
+fi
+
+# Operate on the vm domain itself.
+if [ -z "$dev" ]; then
+	if [ "$invert" == "yes" ]; then
+		virsh destroy "$vm_name"
+		exit $?
+	elif [ "$try_reattach" == "yes" ]; then
+		echo "-r doesn't make sense for no device.  Bloody hell."
+		exit 1
+	else
+		virsh start "$vm_name"
+		exit $?
+	fi
+# Operate on the device itself.
+elif [ -f "$dev" ]; then
+	if [ "$invert" == "yes" ]; then
+		virsh detach-device --file "$dev" "$vm_name"
+		exit $?
+	elif [ "$try_reattach" == "yes" ]; then
+		virsh detach-device --file "$dev" "$vm_name" || true
+		virsh attach-device "$vm_name" "$dev"
+		exit $?
+	else
+		virsh attach-device "$vm_name" "$dev"
+		exit $?
+	fi
+# If we forgot to exit above, this signals an error that must be rectified.
+else
+	echo "No bloody device $dev found.  You sure you got the right 'un?"
+	echo "We really shouldn't get here.  Exiting 3."
+	exit 3
+fi
+
+echo "Ya forgot to exit, you did.  Exiting 2, I am!"
+exit 2
